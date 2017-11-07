@@ -1,0 +1,35 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.js"></script>
+    </ head>
+
+    <body>
+        <h2> What would you like today's bulletin to be? </h2>
+        <br><br>
+        <!--        <form action="" method="post" enctype="multipart/form-data" data-ajax="false">-->
+        <form action="" method="get" enctype="multipart/form-data" data-ajax="false">
+            <fieldset id='info_1'>
+                <label for="Question">Question:</label>
+                <input type="text" id="Question" name="Question" placeholder="Enter Daily Question!" />
+                <br />
+                <label for="Answer">Answer:</label>
+                <input type="text" id="Answer" name="Answer" placeholder="Enter the Answer" />
+                <br />
+                <label for="choice1">One other choice:</label>
+                <input type="text" id="choice1" name="choice1" placeholder="Enter one other choice" />
+                <br />
+                <label for="choice2">Enter another choice:</label>
+                <input type="text" id="choice2" name="choice2" placeholder="One more choice" />
+                <br>
+                <br />
+                <input type="submit" value="Refresh" />
+            </fieldset>
+
+        </form>
+    </body>
+
+</html>

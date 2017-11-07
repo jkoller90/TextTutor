@@ -33,28 +33,28 @@ app.post('/sms', function (request, response) {
     var question = getQuestion();
     console.log(question)
 
-// NEED TO ADD && hasTakenQuiz(userPhone) to each else if
+    // NEED TO ADD && hasTakenQuiz(userPhone) to each else if
 
 
-    if(msgBody.toLowerCase().trim() == 'join'){
+    if (msgBody.toLowerCase().trim() == 'join') {
         addUserToSql(userPhone);
-    } else if(msgBody.toLowerCase().trim() == 'start quiz'  && checkRegistration(userPhone)){
+    } else if (msgBody.toLowerCase().trim() == 'start quiz' && checkRegistration(userPhone)) {
         console.log('Sending Quiz Question');
         sendQuestion(userPhone);
-    } else if(msgBody.toLowerCase().trim()== question[1] && hasQuizStarted(userPhone)){
+    } else if (msgBody.toLowerCase().trim() == question[1] && hasQuizStarted(userPhone)) {
         console.log('Answer is correct');
-        sendCorrectResponse(userPhone,question[1]);
-        updateSQL(userPhone,question[1],true)
-    } else if(msgBody.toLowerCase().trim()== question[2] && hasQuizStarted(userPhone)){
+        sendCorrectResponse(userPhone, question[1]);
+        updateSQL(userPhone, question[1], true)
+    } else if (msgBody.toLowerCase().trim() == question[2] && hasQuizStarted(userPhone)) {
         console.log('Answer is wrong');
-        sendIncorrectResponse(userPhone,question[2],question[1]);
-        updateSQL(userPhone,question[2],false)
-    } else if(msgBody.toLowerCase().trim()== question[3] && hasQuizStarted(userPhone)){
+        sendIncorrectResponse(userPhone, question[2], question[1]);
+        updateSQL(userPhone, question[2], false)
+    } else if (msgBody.toLowerCase().trim() == question[3] && hasQuizStarted(userPhone)) {
         console.log('Answer is wrong');
-        sendIncorrectResponse(userPhone,question[3],question[1]);
-        updateSQL(userPhone,question[3],false)
+        sendIncorrectResponse(userPhone, question[3], question[1]);
+        updateSQL(userPhone, question[3], false)
 
-    } else{
+    } else {
         InvalidUserInputText(userPhone, msgBody)
     }
 });
@@ -64,31 +64,31 @@ app.post('/sms', function (request, response) {
 // ================================================================
 // App Logic
 // ================================================================
-function startLesson(){
+function startLesson() {
     // Set who wants quiz to false
     var phoneNumbers = getPhoneNumbers();
     sendInformationText(phoneNumbers);
     // Info message should end with do you want to take a quiz?    
 }
 
-function sendInformationText(phoneNumbers){
+function sendInformationText(phoneNumbers) {
     // loops through numbers
 }
 
-function checkRegistration(phonenumber){
+function checkRegistration(phonenumber) {
     // Check if user exists in DB
     // checkNumberExists(phonenumber)
     return true;
 
 }
 
-function sendQuestion(phonenumber){
+function sendQuestion(phonenumber) {
     var question = getQuestion();
-    console.log('User : '+phonenumber+' is starting a quiz')
+    console.log('User : ' + phonenumber + ' is starting a quiz')
     client.messages.create({
         from: '+19149966800',
         to: phonenumber,
-        body: question[0]+":\n"+question[1]+"\n"+question[2]+"\n"+question[3]
+        body: question[0] + ":\n" + question[1] + "\n" + question[2] + "\n" + question[3]
     }, function (err, message) {
         if (err) console.error(err.message);
     });
@@ -99,7 +99,7 @@ function sendQuestion(phonenumber){
 // ================================================================
 // Admin Console
 // ================================================================
-app.get('/',function(req,res){
+app.get('/', function (req, res) {
     getPhoneNumbers();
 })
 
@@ -111,7 +111,7 @@ app.post('/admin', function (req, res) {
     formSubmission(req, res);
     console.log('Admin Submitted Data');
     startLesson();
-    console.log('Lesson Started');    
+    console.log('Lesson Started');
 })
 
 
@@ -122,6 +122,32 @@ var fs = require('fs');
 var formidable = require("formidable");
 var util = require('util');
 var port = process.env.PORT || 3000;
+
+// Jon will finish this function and create an HTML table that will be shown after
+// form submission:
+// Make a button to refresh
+// Listview 
+// sound/video
+// 1 link 
+// 3 images
+
+/*
+dummy data for getting grades (average to letter score):
+*/
+
+function getClassGrades(res) {
+
+    
+    fs.readFile('index.html', function (err, data) {
+        res.writeHead(200, {
+            'Content-Type': 'text/html',
+            'Content-Length': data.length
+        });
+        res.write(data);
+        res.end();
+    });
+}
+
 
 function displayForm(res) {
     fs.readFile('index.html', function (err, data) {
@@ -152,9 +178,9 @@ function formSubmission(req, res) {
             fields: fields
         }));
 
-    // // Printing Out Form
-    //     console.log(fields);
-    //     console.log(values);
+        // // Printing Out Form
+        //     console.log(fields);
+        //     console.log(values);
         addQuestionsToSql(values);
     });
     form.parse(req);
@@ -162,8 +188,8 @@ function formSubmission(req, res) {
 // ================================================================
 // Twillio Messages
 // ================================================================
-function InvalidUserInputText(phonenumber, text){
-    console.log('User inserted incorrect text: '+text)
+function InvalidUserInputText(phonenumber, text) {
+    console.log('User inserted incorrect text: ' + text)
     client.messages.create({
         from: '+19149966800',
         to: phonenumber,
@@ -173,8 +199,8 @@ function InvalidUserInputText(phonenumber, text){
     });
 }
 
-function sendCorrectResponse(phonenumber, answer){
-    console.log('User inserted correct answer: '+answer)
+function sendCorrectResponse(phonenumber, answer) {
+    console.log('User inserted correct answer: ' + answer)
     client.messages.create({
         from: '+19149966800',
         to: phonenumber,
@@ -184,12 +210,12 @@ function sendCorrectResponse(phonenumber, answer){
     });
 }
 
-function sendIncorrectResponse(phonenumber, answer, correctAnswer){
-    console.log('User inserted incorrect answer: '+answer)
+function sendIncorrectResponse(phonenumber, answer, correctAnswer) {
+    console.log('User inserted incorrect answer: ' + answer)
     client.messages.create({
         from: '+19149966800',
         to: phonenumber,
-        body: "Sorry you got this one wrong, the correct answer was: "+correctAnswer
+        body: "Sorry you got this one wrong, the correct answer was: " + correctAnswer
     }, function (err, message) {
         if (err) console.error(err.message);
     });
@@ -222,7 +248,7 @@ function readSql() {
 
 function addUserToSql(phonenumber) {
     // Twilio Message Functions
-    function successfullyAddedText(phonenumber){
+    function successfullyAddedText(phonenumber) {
         console.log("Success Message being sent")
         client.messages.create({
             from: '+19149966800',
@@ -234,7 +260,7 @@ function addUserToSql(phonenumber) {
     }
 
     // Connection to SQL
-    console.log('Adding phonenumber: '+phonenumber+' to DB')
+    console.log('Adding phonenumber: ' + phonenumber + ' to DB')
     var mysql = require('mysql');
     var con = mysql.createConnection({
         host: "localhost",
@@ -260,8 +286,8 @@ function addUserToSql(phonenumber) {
     successfullyAddedText(phonenumber);
 }
 
-function checkNumberExists(phonenumber){
-    console.log('Checking if number: '+phonenumber+' is in DB')
+function checkNumberExists(phonenumber) {
+    console.log('Checking if number: ' + phonenumber + ' is in DB')
     var mysql = require('mysql');
     var con = mysql.createConnection({
         host: "localhost",
@@ -276,15 +302,15 @@ function checkNumberExists(phonenumber){
         }
         console.log('Connection established');
     });
-    con.query('select * from class where (?)', [phonenumber],function (error, rows, fields) {
+    con.query('select * from class where (?)', [phonenumber], function (error, rows, fields) {
         if (error) {
-            console.log('Phone Number: '+phonenumber+' does not exist in DB')
+            console.log('Phone Number: ' + phonenumber + ' does not exist in DB')
             throw error;
-        } 
-        if (rows[0]['phonenumber']){
+        }
+        if (rows[0]['phonenumber']) {
             exists = true;
             console.log("HERE")
-        }        
+        }
     });
     con.end();
 }
@@ -315,12 +341,12 @@ function addQuestionsToSql(data) {
     // Close connection
     con.end();
     // END SQL
-    console.log('Successfully Added data into SQL: '+data)
+    console.log('Successfully Added data into SQL: ' + data)
 }
 
-function updateSQL(phonenumber, answer, bool){
+function updateSQL(phonenumber, answer, bool) {
     // Connection to SQL
-    console.log('Updating User DB, answer: '+answer+' ,correct: '+bool)
+    console.log('Updating User DB, answer: ' + answer + ' ,correct: ' + bool)
     var mysql = require('mysql');
     var con = mysql.createConnection({
         host: "localhost",
@@ -348,7 +374,7 @@ function updateSQL(phonenumber, answer, bool){
 // Get From DB functions
 // ================================================================
 // need to fix
-function getPhoneNumbers(){
+function getPhoneNumbers() {
     // TODO Add SQL query
     numbers = []; //'+19143301533','+19174160409'
     var mysql = require('mysql');
@@ -365,48 +391,35 @@ function getPhoneNumbers(){
         }
         console.log('Connection established');
     });
-    setTimeout(function(){
-        con.query('select * from class' ,function (error, rows, fields) {
+    setTimeout(function () {
+        con.query('select * from class', function (error, rows, fields) {
 
             if (error) {
                 throw error;
             }
-           
-            rows.forEach(function(number){
+
+            rows.forEach(function (number) {
                 numbers.push(number);
             })
 
         });
         con.end();
         console.log('after query and connection closed: ' + numbers);
-        return numbers        
+        return numbers
     }, 8000);
 }
 
 //Need to fix
-function getQuestion(){
-    return ['q3','a','1','2'];
+function getQuestion() {
+    return ['q3', 'a', '1', '2'];
 }
 
 //Need to fix
-function hasQuizStarted(phonenumber){
+function hasQuizStarted(phonenumber) {
     return true;
 }
 
 //Need to fix
-function hasTakenQuiz(phonenumber){
+function hasTakenQuiz(phonenumber) {
     return true;
 }
-
-// Jon will finish this function and create an HTML table that will be shown after
-// form submission:
-// Make a button to refresh
-// Listview 
-// sound/video
-// 1 link 
-// 3 images
-
-function getClassGrades(){
-    return 
-}
-
