@@ -99,6 +99,10 @@ function sendQuestion(phonenumber){
 // ================================================================
 // Admin Console
 // ================================================================
+app.get('/',function(req,res){
+    getPhoneNumbers();
+})
+
 app.get('/admin', function (req, res) {
     displayForm(res);
 });
@@ -346,7 +350,34 @@ function updateSQL(phonenumber, answer, bool){
 // need to fix
 function getPhoneNumbers(){
     // TODO Add SQL query
-    numbers = ['+19143301533','+19174160409']
+    numbers = []; //'+19143301533','+19174160409'
+    var mysql = require('mysql');
+    var con = mysql.createConnection({
+        host: "localhost",
+        user: "root",
+        password: "123456",
+        database: 'db'
+    });
+    con.connect((err) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.log('Connection established');
+    });
+    con.query('select * from class' ,function (error, rows, fields) {
+        
+        if (error) {
+            console.log('Phone Number: '+phonenumber+' does not exist in DB')
+            throw error;
+        } 
+        if (rows[0]['phonenumber']){
+            exists = true;
+            console.log("HERE")
+        } 
+        
+    });
+    con.end();
     return numbers
 }
 
