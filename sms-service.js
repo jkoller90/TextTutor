@@ -365,19 +365,22 @@ function getPhoneNumbers(){
         }
         console.log('Connection established');
     });
-    con.query('select * from class' ,function (error, rows, fields) {
-        
-        if (error) {
-            console.log('Phone Number: '+phonenumber+' does not exist in DB')
-            throw error;
-        } 
-        rows[0].forEadch(function(userCol){
-            console.log(userCol);
-        })
-        
-    });
-    con.end();
-    return numbers
+    setTimeout(function(){
+        con.query('select * from class' ,function (error, rows, fields) {
+
+            if (error) {
+                throw error;
+            }
+           
+            rows.forEach(function(number){
+                numbers.push(number);
+            })
+
+        });
+        con.end();
+        console.log('after query and connection closed: ' + numbers);
+        return numbers        
+    }, 8000);
 }
 
 //Need to fix
