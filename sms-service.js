@@ -371,10 +371,9 @@ function getPhoneNumbers(){
             console.log('Phone Number: '+phonenumber+' does not exist in DB')
             throw error;
         } 
-        if (rows[0]['phonenumber']){
-            exists = true;
-            console.log("HERE")
-        } 
+        rows[0].forEadch(function(userCol){
+            console.log(userCol);
+        })
         
     });
     con.end();
