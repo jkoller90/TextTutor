@@ -1,7 +1,9 @@
+
 html
 	head
-		meta(name="viewport", content="width=device-width, initial-scale=1")
-		link(rel="stylesheet", href="https://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.css")
+		title= 'Person List'
+		meta(name="viewport", content="width=device-width, initial-scale=1") 
+		link(rel="stylesheet",href="https://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.css")
 		style.
 			h4 {
 			background-color: aquamarine;
@@ -22,26 +24,24 @@ html
 			#gradeTable {
 			margin-bottom: 5%;
 			}
+		style
+			include style.css
 	body
-		h4 Student Grades
+		h4= 'Student Grades'
 		#gradeTable
-			table
+		table 
+			tr
+				td='Phone Number'
+				td='Has Taken Quiz'
+				td='Answered Correctly'
+			for person in personList
 				tr
-					th Name
-					th Percent Taken
-					th Grade
-				tr
-					td Jill Smith
-					td 100%
-					td 50%
-				tr
-					td Eve Jackson
-					td 100%
-					td 75%
-			br
-			button#refresh Refresh
-			button#back Back
-			br
+					td= person.phonenumber
+					td= person.hasTakenQuiz
+					td= person.answeredCorrectly
+		br
+		button#refresh Refresh
+		button#back Back
 		h4 Extra Resources
 		ul(data-role="listview")
 			li
@@ -51,29 +51,14 @@ html
 			li
 				a(href="https://plato.stanford.edu") Stanford Encyclopedia of Philosophy
 			li
-				a(href="https://www.wikipedia.org/") Wikipedia
+				a(href="https://www.wikipedia.org") Wikipedia
 		script(src="https://code.jquery.com/jquery-1.11.1.min.js")
 		script(src="https://code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.js")
 		script.
-			$('#refresh').click(function () {
-			location.reload();
+			$("#refresh").click(function(){
+				location.reload();
 			});
-			$('#back').click(function () {
-			window.location.replace('https://texttutortwil.herokuapp.com/admin');
+			$("#back").click(function(){
+				window.location.replace("https://texttutortwil.herokuapp.com/admin");
 			});
-
-//html
-//	head
-//		title= 'Person List'
-//		style
-//			include style.css
-//	body
-//		h1= 'Person List'
-//	table
-//		for person in personList
-//			tr
-//				td= person.id
-//				td
-//					a(href='/person/'+person.id) #{person.name}
-//				td= person.address
-//				td= person.phone
+			
