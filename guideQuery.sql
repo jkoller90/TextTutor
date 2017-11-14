@@ -3,6 +3,7 @@ DROP TABLE class;
 
 use db;
 
+use sql9205093;
 SET SQL_SAFE_UPDATES = 0;
 
 CREATE TABLE class (

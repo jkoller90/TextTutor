@@ -118,9 +118,9 @@ app.set('view engine', 'pug');
 
 app.get('/grades', function (req, res) {
 	var personList = [];
-
+//mysql w/o sync
 	// Connect to MySQL database.
-	connection.connect();
+//	connection.connect();
 
 	// Do the query to get data.
 	connection.query('SELECT * FROM class WHERE id > 0', function (err, rows, fields) {
