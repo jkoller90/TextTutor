@@ -397,11 +397,12 @@ function addQuestionsToSql(data) {
 	// Connection to SQL
 
 	// Insert Statement
+	console.log('in between queries on 400 for addQuestions')
 	connection.query("delete from questions where question like '%%' ")
 	connection.query('insert into questions (question, answer, option1, option2) value (?)', [data], function (error, rows, fields) {
 		if (error) throw error;
 	});
-	// END SQL
+	connection.query('commit');
 	console.log('Successfully Added data into SQL: ' + data)
 }
 
