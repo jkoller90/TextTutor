@@ -22,7 +22,7 @@ var connection = new MySql({
 	password: password
 });
 
-connection.connect();
+
 
 //	var mysql = require('mysql');
 //	var con = mysql.createConnection({
@@ -443,6 +443,7 @@ function getPhoneNumbers() {
 }
 
 function getQuestion() {
+	connection.connect();
 	var result = connection.query('SELECT * from questions');
 //	connection.end();
 	return result[0];
