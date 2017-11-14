@@ -13,30 +13,28 @@ var user = 'sql9205093';
 var database = 'sql9205093';
 var password = 'BGzCChUL9S';
 
-var MySql = require('sync-mysql');
-
-var connection = new MySql({
+var mysqlSync = require('sync-mysql');
+var conSync = new mysqlSync({
 	host: host,
 	user: user,
 	database: database,
 	password: password
 });
+//doesn't need a connection method call
 
-
-
-//	var mysql = require('mysql');
-//	var con = mysql.createConnection({
-//		host: host,
-//		user: user,
-//		database: database,
-//		password: password
-//	});
-//	con.connect((err) => {
-//		if (err) {
-//			console.log(err);
-//			return;
-//		}
-//	});
+var mysql = require('mysql');
+var con = mysql.createConnection({
+	host: host,
+	user: user,
+	database: database,
+	password: password
+});
+con.connect((err) => {
+	if (err) {
+		console.log(err);
+		return;
+	}
+});
 
 // ================================================================
 // Setup HTTP Server and App parser 
@@ -120,11 +118,11 @@ app.set('view engine', 'pug');
 
 app.get('/grades', function (req, res) {
 	var personList = [];
-//mysql w/o syncg
+	//mysql w/o syncg
 	// Connect to MySQL database.
-//	connection.connect();
+	//	connection.connect();
 	var gradesMysql = require('mysql');
-	
+
 	var con = gradesMysql.createConnection({
 		host: host,
 		user: user,
@@ -386,10 +384,10 @@ function addUserToSql(phonenumber) {
 	console.log('Adding phonenumber: ' + phonenumber + ' to DB')
 
 	// Insert Statement
-	connection.query('insert into class (`phonenumber`) value (?)', [phonenumber], function (error, rows, fields) {
+	con.query('insert into class (`phonenumber`) value (?)', [phonenumber], function (error, rows, fields) {
 		if (error) throw error;
 	});
-		
+
 	// END SQL
 	successfullyAddedText(phonenumber);
 }
@@ -399,31 +397,31 @@ function addQuestionsToSql(data) {
 
 	// Insert Statement
 	console.log('in between queries on 400 for addQuestions')
-	connection.query("delete from questions where question like '%%' ")
-	connection.query('insert into questions (question, answer, option1, option2) value (?)', [data], function (error, rows, fields) {
+	con.query("delete from questions where question like '%%' ")
+	con.query('insert into questions (question, answer, option1, option2) value (?)', [data], function (error, rows, fields) {
 		if (error) throw error;
 	});
-	connection.query('commit');
+//	con.query('commit');
 	console.log('Successfully Added data into SQL: ' + data)
 }
 
 function updateSQL(phonenumber, answer, bool) {
 	// Connection to SQL
 	console.log('Updating User DB, answer: ' + answer + ' ,correct: ' + bool)
-	connection.query("UPDATE class SET answer = (?), answeredCorrectly = (?) where phonenumber = (?)", [answer, bool, phonenumber], function (error, rows, fields) {
+	con.query("UPDATE class SET answer = (?), answeredCorrectly = (?) where phonenumber = (?)", [answer, bool, phonenumber], function (error, rows, fields) {
 		if (error) throw error;
 	});
 	// END SQL
 }
 
 function setHasQuizStarted(bool, phonenumber) {
-	connection.query("UPDATE class SET hasQuizStarted = (?) where phonenumber = (?)", [bool, phonenumber], function (error, rows, fields) {
+	con.query("UPDATE class SET hasQuizStarted = (?) where phonenumber = (?)", [bool, phonenumber], function (error, rows, fields) {
 		if (error) throw error;
 	});
 }
 
 function setHasTakenQuiz(bool, phonenumber) {
-	connection.query("UPDATE class SET hasTakenQuiz = (?) where phonenumber = (?)", [bool, phonenumber], function (error, rows, fields) {
+	con.query("UPDATE class SET hasTakenQuiz = (?) where phonenumber = (?)", [bool, phonenumber], function (error, rows, fields) {
 		if (error) throw error;
 	});
 }
@@ -432,27 +430,27 @@ function setHasTakenQuiz(bool, phonenumber) {
 // ================================================================
 
 function getPhoneNumbers() {
-	var result = connection.query('SELECT * from class');
+	var result = conSync.query('SELECT * from class');
 	var phoneNumbers = [];
 	for (var i = 0; i < result.length; i++) {
 		phoneNumbers.push(result[i]['phonenumber'])
 	}
-//	connection.end();
+	//	connection.end();
 	console.log(phoneNumbers)
 	return phoneNumbers;
 }
 
 function getQuestion() {
-	connection.connect();
-	var result = connection.query('SELECT * from questions');
-//	connection.end();
+	conSync.connect();
+	var result = conSync.query('SELECT * from questions');
+	//	connection.end();
 	return result[0];
 }
 
 function checkNumberExists(phonenumber) {
 	console.log('Checking if number: ' + phonenumber + ' is in DB')
 	var bool = false;
-	var result = connection.query('select * from class where phonenumber = (?)', [phonenumber], function (error, rows, fields) {
+	var result = conSync.query('select * from class where phonenumber = (?)', [phonenumber], function (error, rows, fields) {
 		if (error) {
 			throw error;
 			console.log('Phone Number: ' + phonenumber + ' does not exist in DB')
@@ -465,14 +463,14 @@ function checkNumberExists(phonenumber) {
 		bool = true;
 	}
 
-//	connection.end();
+	//	connection.end();
 	return bool;
 }
 
 function hasQuizStarted(phonenumber) {
 	console.log('Checking if number: ' + phonenumber + ' has already started this quiz')
 	var bool;
-	var result = connection.query('SELECT hasQuizStarted from class where phonenumber = (?)', [phonenumber], function (error, rows, fields) {
+	var result = conSync.query('SELECT hasQuizStarted from class where phonenumber = (?)', [phonenumber], function (error, rows, fields) {
 		if (error) throw error;
 	});
 	// console.log("Here: "+result[0]['hasQuizStarted'])
@@ -481,14 +479,14 @@ function hasQuizStarted(phonenumber) {
 	else if (result[0]['hasQuizStarted'] != undefined) {
 		bool = false;
 	}
-//	connection.end();
+	//	connection.end();
 	return bool;
 }
 
 function hasTakenQuiz(phonenumber) {
 	console.log('Checking if number: ' + phonenumber + ' has answered this quiz already')
 	var bool;
-	var result = connection.query('SELECT hasTakenQuiz from class where phonenumber = (?)', [phonenumber], function (error, rows, fields) {
+	var result = conSync.query('SELECT hasTakenQuiz from class where phonenumber = (?)', [phonenumber], function (error, rows, fields) {
 		if (error) throw error;
 	});
 	// console.log("Here: "+result[0]['hasQuizStarted'])
@@ -497,6 +495,6 @@ function hasTakenQuiz(phonenumber) {
 	else if (result[0]['hasTakenQuiz']) {
 		bool = false;
 	}
-//	connection.end();
+	//	connection.end();
 	return bool;
 }
