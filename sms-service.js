@@ -13,6 +13,29 @@ var user = 'sql9205093';
 var database = 'sql9205093';
 var password = 'BGzCChUL9S';
 
+var MySql = require('sync-mysql');
+var connection = new MySql({
+	host: host,
+	user: user,
+	database: database,
+	password: password
+});
+
+
+//	var mysql = require('mysql');
+//	var con = mysql.createConnection({
+//		host: host,
+//		user: user,
+//		database: database,
+//		password: password
+//	});
+//	con.connect((err) => {
+//		if (err) {
+//			console.log(err);
+//			return;
+//		}
+//	});
+
 // ================================================================
 // Setup HTTP Server and App parser 
 // ================================================================
@@ -90,20 +113,13 @@ app.post('/sms', function (request, response) {
 // ================================================================
 ///
 /// Use pug as templating engine. Pug is renamed jade.
-var mysql = require('mysql');
+
 app.set('view engine', 'pug');
 
 app.get('/grades', function (req, res) {
 	var personList = [];
 
 	// Connect to MySQL database.
-	var connection =
-		mysql.createConnection({
-			host: host,
-			user: user,
-			database: database,
-			password: password
-		});
 	connection.connect();
 
 	// Do the query to get data.
@@ -358,51 +374,24 @@ function addUserToSql(phonenumber) {
 	}
 	// Connection to SQL
 	console.log('Adding phonenumber: ' + phonenumber + ' to DB')
-	var mysql = require('mysql');
-	var con = mysql.createConnection({
-		host: host,
-		user: user,
-		database: database,
-		password: password
-	});
-	con.connect((err) => {
-		if (err) {
-			console.log(err);
-			return;
-		}
-	});
+
 	// Insert Statement
-	con.query('insert into class (`phonenumber`) value (?)', [phonenumber], function (error, rows, fields) {
+	connection.query('insert into class (`phonenumber`) value (?)', [phonenumber], function (error, rows, fields) {
 		if (error) throw error;
 	});
-	// Close connection
-	con.end();
+		
 	// END SQL
 	successfullyAddedText(phonenumber);
 }
 
 function addQuestionsToSql(data) {
 	// Connection to SQL
-	var mysql = require('mysql');
-	var con = mysql.createConnection({
-		host: host,
-		user: user,
-		database: database,
-		password: password
-	});
-	con.connect((err) => {
-		if (err) {
-			console.log(err);
-			return;
-		}
-	});
+
 	// Insert Statement
-	con.query("delete from questions where question like '%%' ")
-	con.query('insert into questions (question, answer, option1, option2) value (?)', [data], function (error, rows, fields) {
+	connection.query("delete from questions where question like '%%' ")
+	connection.query('insert into questions (question, answer, option1, option2) value (?)', [data], function (error, rows, fields) {
 		if (error) throw error;
 	});
-	// Close connection
-	con.end();
 	// END SQL
 	console.log('Successfully Added data into SQL: ' + data)
 }
@@ -410,124 +399,46 @@ function addQuestionsToSql(data) {
 function updateSQL(phonenumber, answer, bool) {
 	// Connection to SQL
 	console.log('Updating User DB, answer: ' + answer + ' ,correct: ' + bool)
-	var mysql = require('mysql');
-	var con = mysql.createConnection({
-		host: host,
-		user: user,
-		database: database,
-		password: password
-	});
-	con.connect((err) => {
-		if (err) {
-			console.log(err);
-			return;
-		}
-	});
-	// Insert Statement
-	con.query("UPDATE class SET answer = (?), answeredCorrectly = (?) where phonenumber = (?)", [answer, bool, phonenumber], function (error, rows, fields) {
+	connection.query("UPDATE class SET answer = (?), answeredCorrectly = (?) where phonenumber = (?)", [answer, bool, phonenumber], function (error, rows, fields) {
 		if (error) throw error;
 	});
-	// Close connection
-	con.end();
 	// END SQL
 }
 
 function setHasQuizStarted(bool, phonenumber) {
-	var mysql = require('mysql');
-	var con = mysql.createConnection({
-		host: host,
-		user: user,
-		database: database,
-		password: password
-	});
-	con.connect((err) => {
-		if (err) {
-			console.log(err);
-			return;
-		}
-	});
-	con.query("UPDATE class SET hasQuizStarted = (?) where phonenumber = (?)", [bool, phonenumber], function (error, rows, fields) {
+	connection.query("UPDATE class SET hasQuizStarted = (?) where phonenumber = (?)", [bool, phonenumber], function (error, rows, fields) {
 		if (error) throw error;
 	});
-	con.end();
-
 }
 
 function setHasTakenQuiz(bool, phonenumber) {
-	var mysql = require('mysql');
-	var con = mysql.createConnection({
-		host: host,
-		user: user,
-		database: database,
-		password: password
-	});
-	con.connect((err) => {
-		if (err) {
-			console.log(err);
-			return;
-		}
-	});
-	con.query("UPDATE class SET hasTakenQuiz = (?) where phonenumber = (?)", [bool, phonenumber], function (error, rows, fields) {
+	connection.query("UPDATE class SET hasTakenQuiz = (?) where phonenumber = (?)", [bool, phonenumber], function (error, rows, fields) {
 		if (error) throw error;
 	});
-	con.end();
-
 }
 
 // Get From DB functions
 // ================================================================
 
 function getPhoneNumbers() {
-	// TODO Add SQL query
-	// numbers = ['+19143301533', '+19174160409']
-	// return numbers
-	var MySql = require('sync-mysql');
-	var connection = new MySql({
-		host: host,
-		user: user,
-		database: database,
-		password: password
-	});
-
 	var result = connection.query('SELECT * from class');
 	var phoneNumbers = [];
 	for (var i = 0; i < result.length; i++) {
 		phoneNumbers.push(result[i]['phonenumber'])
 	}
-	connection.end();
+//	connection.end();
 	console.log(phoneNumbers)
 	return phoneNumbers;
 }
 
 function getQuestion() {
-	// return ['q3', 'a', '1', '2'];
-	var MySql = require('sync-mysql');
-	var connection = new MySql({
-		host: host,
-		user: user,
-		database: database,
-		password: password
-	});
-
 	var result = connection.query('SELECT * from questions');
-	// var phoneNumbers = [];
-	//  	for (var i = 0; i < result.length; i++) {
-	//      phoneNumbers.push(result[i]['phonenumber'])
-	//    }
-	connection.end();
+//	connection.end();
 	return result[0];
-
 }
 
 function checkNumberExists(phonenumber) {
 	console.log('Checking if number: ' + phonenumber + ' is in DB')
-	var MySql = require('sync-mysql');
-	var connection = new MySql({
-		host: host,
-		user: user,
-		database: database,
-		password: password
-	});
 	var bool = false;
 	var result = connection.query('select * from class where phonenumber = (?)', [phonenumber], function (error, rows, fields) {
 		if (error) {
@@ -542,20 +453,13 @@ function checkNumberExists(phonenumber) {
 		bool = true;
 	}
 
-	connection.end();
+//	connection.end();
 	return bool;
 }
 
 function hasQuizStarted(phonenumber) {
 	console.log('Checking if number: ' + phonenumber + ' has already started this quiz')
 	var bool;
-	var MySql = require('sync-mysql');
-	var connection = new MySql({
-		host: host,
-		user: user,
-		database: database,
-		password: password
-	});
 	var result = connection.query('SELECT hasQuizStarted from class where phonenumber = (?)', [phonenumber], function (error, rows, fields) {
 		if (error) throw error;
 	});
@@ -565,20 +469,13 @@ function hasQuizStarted(phonenumber) {
 	else if (result[0]['hasQuizStarted'] != undefined) {
 		bool = false;
 	}
-	connection.end();
+//	connection.end();
 	return bool;
 }
 
 function hasTakenQuiz(phonenumber) {
 	console.log('Checking if number: ' + phonenumber + ' has answered this quiz already')
 	var bool;
-	var MySql = require('sync-mysql');
-	var connection = new MySql({
-		host: host,
-		user: user,
-		database: database,
-		password: password
-	});
 	var result = connection.query('SELECT hasTakenQuiz from class where phonenumber = (?)', [phonenumber], function (error, rows, fields) {
 		if (error) throw error;
 	});
@@ -588,6 +485,6 @@ function hasTakenQuiz(phonenumber) {
 	else if (result[0]['hasTakenQuiz']) {
 		bool = false;
 	}
-	connection.end();
+//	connection.end();
 	return bool;
 }
