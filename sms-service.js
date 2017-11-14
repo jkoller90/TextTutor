@@ -94,7 +94,7 @@ app.set('view engine', 'pug');
 /// 
 /// To get collection of person saved in MySQL database.
 ///
-app.get('/person', function(req, res) {
+app.get('/grades', function(req, res) {
 	var personList = [];
 
 	// Connect to MySQL database.
@@ -279,7 +279,7 @@ app.get('/admin', function (req, res) {
     displayForm(res);
 });
 
-app.get('/grades', function (req, res) {
+//app.get('/grades', function (req, res) {
     getClassGrades(res);
 });
 
