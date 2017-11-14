@@ -273,9 +273,11 @@ app.get('/admin', function (req, res) {
 });
 
 app.post('/admin', function (req, res) {
-	formSubmission(req, res);
-	console.log('Admin Submitted Data');
-	startLesson();
+	setTimeout(function(){
+		formSubmission(req, res);
+		console.log('Admin Submitted Data');
+		startLesson();		
+	},1100);
 })
 // ================================================================
 // root redirects to /admin 
@@ -396,9 +398,6 @@ function addUserToSql(phonenumber) {
 
 	// END SQL
 	successfullyAddedText(phonenumber);
-}
-function resetQuestions(){
-	
 }
 
 function addQuestionsToSql(data) {	
