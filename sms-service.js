@@ -22,6 +22,7 @@ var connection = new MySql({
 	password: password
 });
 
+connection.connect();
 
 //	var mysql = require('mysql');
 //	var con = mysql.createConnection({
