@@ -21,6 +21,12 @@ var conSync = new mysqlSync({
 	password: password
 });
 //doesn't need a connection method call
+//conSync.connect((err)=>{
+//	if(err){
+//		console.log(err);
+//		return;
+//	}
+//})
 
 var mysql = require('mysql');
 var con = mysql.createConnection({
@@ -441,7 +447,7 @@ function getPhoneNumbers() {
 }
 
 function getQuestion() {
-	conSync.connect();
+//	conSync.connect();
 	var result = conSync.query('SELECT * from questions');
 	//	connection.end();
 	return result[0];
