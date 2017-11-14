@@ -118,7 +118,7 @@ app.set('view engine', 'pug');
 
 app.get('/grades', function (req, res) {
 	var personList = [];
-//mysql w/o sync
+//mysql w/o syncg
 	// Connect to MySQL database.
 //	connection.connect();
 
