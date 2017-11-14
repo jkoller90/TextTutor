@@ -397,12 +397,14 @@ function addUserToSql(phonenumber) {
 	// END SQL
 	successfullyAddedText(phonenumber);
 }
+function resetQuestions(){
+	
+}
 
-function addQuestionsToSql(data) {
-	// Connection to SQL
-
-	// Insert Statement
-	console.log('in between queries on 400 for addQuestions')
+function addQuestionsToSql(data) {	
+	//1. reset student info
+	con.query('update class set hasQuizStarted=0,answer=NULL,answeredCorrectly=0,hasTakenQuiz=0 ')	
+	//2. adjust questions table
 	con.query("delete from questions where question like '%%' ")
 	con.query('insert into questions (question, answer, option1, option2) value (?)', [data], function (error, rows, fields) {
 		if (error) throw error;
