@@ -14,6 +14,7 @@ var database = 'sql9205093';
 var password = 'BGzCChUL9S';
 
 var MySql = require('sync-mysql');
+
 var connection = new MySql({
 	host: host,
 	user: user,
@@ -121,9 +122,17 @@ app.get('/grades', function (req, res) {
 //mysql w/o syncg
 	// Connect to MySQL database.
 //	connection.connect();
-
+	var gradesMysql = require('mysql');
+	
+	var con = gradesMysql.createConnection({
+		host: host,
+		user: user,
+		database: database,
+		password: password
+	});
 	// Do the query to get data.
-	connection.query('SELECT * FROM class WHERE id > 0', function (err, rows, fields) {
+	con.connect();
+	con.query('SELECT * FROM class WHERE id > 0', function (err, rows, fields) {
 		var person;
 
 		if (err) {
@@ -158,7 +167,7 @@ app.get('/grades', function (req, res) {
 	});
 
 	// Close the MySQL connection
-	connection.end();
+	con.end();
 });
 
 // ================================================================
