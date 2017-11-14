@@ -11,7 +11,7 @@ var fromNum = '+19149966800';
 var host = 'sql9.freesqldatabase.com';
 var user = 'sql9205093';
 var database = 'sql9205093';
-var password ='BGzCChUL9S';
+var password = 'BGzCChUL9S';
 
 // ================================================================
 // Setup HTTP Server and App parser 
@@ -29,6 +29,7 @@ app.use('/static', express.static('assets'))
 http.createServer(app).listen(process.env.PORT || 3000, function () {
 	console.log("Express server listening on port 3000");
 });
+
 // ================================================================
 // Catches a text message from a user and do action
 // ================================================================
@@ -48,7 +49,6 @@ app.post('/sms', function (request, response) {
 			addUserToSql(userPhone);
 		} else {
 			sendSmsMessage(userPhone, "You are already registered! Please text 'start quiz'");
-
 		}
 	} else if (msgBody.toLowerCase().trim() == 'start quiz') {
 		if (checkRegistration(userPhone)) {
@@ -77,10 +77,10 @@ app.post('/sms', function (request, response) {
 			updateSQL(userPhone, option2, false)
 		}
 	} else {
-
-		sendSmsMessage(userPhone, "Please check your message! It is not valid input");
-		console.log("User " + userPhone + " made a typo!");
-
+		if (checkNumberExists(userPhone)) {
+			sendSmsMessage(userPhone, "Please check your message! It is not valid input");
+			console.log("User " + userPhone + " made a typo!");
+		}
 	}
 });
 
@@ -90,7 +90,6 @@ app.post('/sms', function (request, response) {
 // ================================================================
 ///
 /// Use pug as templating engine. Pug is renamed jade.
-///
 var mysql = require('mysql');
 app.set('view engine', 'pug');
 
@@ -361,10 +360,10 @@ function addUserToSql(phonenumber) {
 	console.log('Adding phonenumber: ' + phonenumber + ' to DB')
 	var mysql = require('mysql');
 	var con = mysql.createConnection({
-			host: host,
-			user: user,
-			database: database,
-			password: password
+		host: host,
+		user: user,
+		database: database,
+		password: password
 	});
 	con.connect((err) => {
 		if (err) {
@@ -386,10 +385,10 @@ function addQuestionsToSql(data) {
 	// Connection to SQL
 	var mysql = require('mysql');
 	var con = mysql.createConnection({
-			host: host,
-			user: user,
-			database: database,
-			password: password
+		host: host,
+		user: user,
+		database: database,
+		password: password
 	});
 	con.connect((err) => {
 		if (err) {
@@ -413,10 +412,10 @@ function updateSQL(phonenumber, answer, bool) {
 	console.log('Updating User DB, answer: ' + answer + ' ,correct: ' + bool)
 	var mysql = require('mysql');
 	var con = mysql.createConnection({
-			host: host,
-			user: user,
-			database: database,
-			password: password
+		host: host,
+		user: user,
+		database: database,
+		password: password
 	});
 	con.connect((err) => {
 		if (err) {
@@ -436,10 +435,10 @@ function updateSQL(phonenumber, answer, bool) {
 function setHasQuizStarted(bool, phonenumber) {
 	var mysql = require('mysql');
 	var con = mysql.createConnection({
-			host: host,
-			user: user,
-			database: database,
-			password: password
+		host: host,
+		user: user,
+		database: database,
+		password: password
 	});
 	con.connect((err) => {
 		if (err) {
@@ -457,10 +456,10 @@ function setHasQuizStarted(bool, phonenumber) {
 function setHasTakenQuiz(bool, phonenumber) {
 	var mysql = require('mysql');
 	var con = mysql.createConnection({
-			host: host,
-			user: user,
-			database: database,
-			password: password
+		host: host,
+		user: user,
+		database: database,
+		password: password
 	});
 	con.connect((err) => {
 		if (err) {
@@ -484,10 +483,10 @@ function getPhoneNumbers() {
 	// return numbers
 	var MySql = require('sync-mysql');
 	var connection = new MySql({
-			host: host,
-			user: user,
-			database: database,
-			password: password
+		host: host,
+		user: user,
+		database: database,
+		password: password
 	});
 
 	var result = connection.query('SELECT * from class');
@@ -495,7 +494,7 @@ function getPhoneNumbers() {
 	for (var i = 0; i < result.length; i++) {
 		phoneNumbers.push(result[i]['phonenumber'])
 	}
-	connection.end;
+	connection.end();
 	console.log(phoneNumbers)
 	return phoneNumbers;
 }
@@ -504,10 +503,10 @@ function getQuestion() {
 	// return ['q3', 'a', '1', '2'];
 	var MySql = require('sync-mysql');
 	var connection = new MySql({
-			host: host,
-			user: user,
-			database: database,
-			password: password
+		host: host,
+		user: user,
+		database: database,
+		password: password
 	});
 
 	var result = connection.query('SELECT * from questions');
@@ -515,7 +514,7 @@ function getQuestion() {
 	//  	for (var i = 0; i < result.length; i++) {
 	//      phoneNumbers.push(result[i]['phonenumber'])
 	//    }
-	connection.end;
+	connection.end();
 	return result[0];
 
 }
@@ -524,10 +523,10 @@ function checkNumberExists(phonenumber) {
 	console.log('Checking if number: ' + phonenumber + ' is in DB')
 	var MySql = require('sync-mysql');
 	var connection = new MySql({
-			host: host,
-			user: user,
-			database: database,
-			password: password
+		host: host,
+		user: user,
+		database: database,
+		password: password
 	});
 	var bool = false;
 	var result = connection.query('select * from class where phonenumber = (?)', [phonenumber], function (error, rows, fields) {
@@ -543,7 +542,7 @@ function checkNumberExists(phonenumber) {
 		bool = true;
 	}
 
-	connection.end;
+	connection.end();
 	return bool;
 }
 
@@ -552,10 +551,10 @@ function hasQuizStarted(phonenumber) {
 	var bool;
 	var MySql = require('sync-mysql');
 	var connection = new MySql({
-			host: host,
-			user: user,
-			database: database,
-			password: password
+		host: host,
+		user: user,
+		database: database,
+		password: password
 	});
 	var result = connection.query('SELECT hasQuizStarted from class where phonenumber = (?)', [phonenumber], function (error, rows, fields) {
 		if (error) throw error;
@@ -566,7 +565,7 @@ function hasQuizStarted(phonenumber) {
 	else if (result[0]['hasQuizStarted'] != undefined) {
 		bool = false;
 	}
-	connection.end;
+	connection.end();
 	return bool;
 }
 
@@ -575,10 +574,10 @@ function hasTakenQuiz(phonenumber) {
 	var bool;
 	var MySql = require('sync-mysql');
 	var connection = new MySql({
-			host: host,
-			user: user,
-			database: database,
-			password: password
+		host: host,
+		user: user,
+		database: database,
+		password: password
 	});
 	var result = connection.query('SELECT hasTakenQuiz from class where phonenumber = (?)', [phonenumber], function (error, rows, fields) {
 		if (error) throw error;
@@ -589,6 +588,6 @@ function hasTakenQuiz(phonenumber) {
 	else if (result[0]['hasTakenQuiz']) {
 		bool = false;
 	}
-	connection.end;
+	connection.end();
 	return bool;
 }

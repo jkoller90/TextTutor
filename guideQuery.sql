@@ -1,6 +1,9 @@
 create database db;
-use db;
 DROP TABLE class;
+
+use db;
+
+SET SQL_SAFE_UPDATES = 0;
 
 CREATE TABLE class (
   id mediumint(8) unsigned NOT NULL auto_increment,
@@ -12,7 +15,6 @@ CREATE TABLE class (
   PRIMARY KEY (`id`)
 ) AUTO_INCREMENT=1;
 
-SET SQL_SAFE_UPDATES = 0;
 
 CREATE TABLE questions (
   id mediumint(8) unsigned NOT NULL auto_increment,
@@ -24,10 +26,6 @@ CREATE TABLE questions (
 ) AUTO_INCREMENT=1;
 
 
-UPDATE class
-    SET answer = 'answer',
-        answeredCorrectly = true
-    WHERE phonenumber = '+19174160409';
 
 
 
@@ -44,3 +42,7 @@ insert into class (`phonenumber`) VALUE ("1-914-330-1533");
 
 
 # generatedata.com
+UPDATE class
+    SET answer = 'answer',
+        answeredCorrectly = true
+    WHERE phonenumber = '+19174160409';

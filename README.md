@@ -24,3 +24,10 @@ You should be able to hard-code the info in the outermost scope of sms.js, thoug
 4. Stream of data is not linear - because the forms are not in the same order as the original process...
 
 Potential fix: add webhook for get requests on /sms as on 117. 
+
+
+debug heroku's app:
+/// \\\ /// \\\ /// \\\
+heroku logs
+
+heroku logs --tails
