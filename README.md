@@ -1,33 +1,39 @@
-# TwilioSend
-
-To run on localhost, type:
-	    
-	                        node sms.js
-
-Be sure to swap the environment variables on line 125 if you do not have environment variables with these names:
-
-	process.env.TWILIO_PHONE_NUMBER
-	process.env.CELL_PHONE_NUMBER
-
-The same goes for these at line 56-59
-
-	process.env.TWILIO_ACCOUNT_SID
-	process.env.TWILIO_AUTH_TOKEN
+# Text Tutor
+	# Instructions for local installation:
 	
-You should be able to hard-code the info in the outermost scope of sms.js, though, and be good to go. 
+	Inside TextTutor directory:
 
+	1.
+    npm install to rebuild any missing module (may not be neccessary)
+    npm start
+  
+	2. 
+		In a separate console, run "ngrok http 3000" to get webook for ngrok. This will be added to number 3 under Setup Heroku-Twilio webhook at the bottom. 
+		example: https://949a1787.ngrok.io/sms
+	
+	3. 
+		Make sure MySQL is installed and running
+		Run guideQuery.sql
+		
+# Instructions for installation on Heroku
+	 
+	 1. Pull from git
+	 2. Log in to Heroku using Command Prompt on Windows, Terminal on Unix/Linux
+	 3. Git add . 
+	 4. Git commit -m " -- " 
+	 5. heroku create <<name it if you'd like>> ||or||
+	 		a. git remote -v to check your remotes for other Heroku remotes
+			b. heroku git:remote -a <<name of existing Heroku App>>
+	 6. Git push heroku master 
+	 
+	 
+# Setup Heroku-Twilio webhook 
+		
+		1. Log in to Twilio.com console and go to Phone Numbers
+		2. Click on the number you'd like to use (red text is actually a hyperlink)
+		3. Under Messaging, in the A Message Comes In form, enter your Heroku url with /sms at the end: https://exampleapp.herokuapp.com/sms 
+		
 
-# Needed Fixes
-1. Phone number input is hard-coded to 3, so successive server calls is not possible
-2. This is not deployable on Heroku for some reason - need to do some research on Web Hooks
-3. Many other code nightmares await because it's a hack 'n slash job of a script...
-4. Stream of data is not linear - because the forms are not in the same order as the original process...
-
-Potential fix: add webhook for get requests on /sms as on 117. 
-
-
-debug heroku's app:
-/// \\\ /// \\\ /// \\\
-heroku logs
-
-heroku logs --tails
+# Setup Remote Database
+	
+		We used freesqldatabase.com, which provides an online database that is accessed on http://phpmyadmin.co/
