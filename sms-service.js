@@ -94,14 +94,14 @@ app.post('/sms', function (request, response) {
 	} else if (msgBody.toLowerCase().trim() == option1.toLowerCase().trim()) {
 		if (canAcceptAnswer(userPhone)) {
 			console.log('Answer is wrong');
-			sendIncorrectResponse(userPhone, option1, answer.toLowerCase().trim());
+			sendIncorrectResponse(userPhone, option1, answer);
 			setHasTakenQuiz(true, userPhone);
 			updateSQL(userPhone, option1, false)
 		}
 	} else if (msgBody.toLowerCase().trim() == option2.toLowerCase().trim()) {
 		if (canAcceptAnswer(userPhone)) {
 			console.log('Answer is wrong');
-			sendIncorrectResponse(userPhone, option2, answer.toLowerCase().trim());
+			sendIncorrectResponse(userPhone, option2, answer);
 			setHasTakenQuiz(true, userPhone);
 			updateSQL(userPhone, option2, false)
 		}
