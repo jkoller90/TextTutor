@@ -9,9 +9,9 @@ var client = require('twilio')(
 var fromNum = '+19149966800';
 
 var host = 'sql9.freesqldatabase.com';
-var user = 'sql9205093';
-var database = 'sql9205093';
-var password = 'BGzCChUL9S';
+var user = 'sql9209858';
+var database = 'sql9209858';
+var password = 'rKnRnmNLuh';
 
 var mysqlSync = require('sync-mysql');
 var conSync = new mysqlSync({
