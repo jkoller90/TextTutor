@@ -2,6 +2,9 @@ create database db;
 use db; 
 drop database db; 
 
+
+use sql9209858; 
+
 CREATE TABLE test(
   `id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
